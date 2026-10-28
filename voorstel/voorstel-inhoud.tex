@@ -12,25 +12,44 @@
 % uitgewerkt (met medesturent VOORNAAM NAAM als mede-auteur).
 % 
 
-\section{Inleiding}%
+\section{Inleiding}
 \label{sec:inleiding}
 
-Waarover zal je bachelorproef gaan? Introduceer het thema en zorg dat volgende zaken zeker duidelijk aanwezig zijn:
+Binnen de retailsector zijn niet alle producten even eenvoudig te identificeren. Voor veel verpakte producten kan gebruikgemaakt worden van een barcode of QR-code, maar bij verse producten zoals brood is dit niet altijd het geval. Hierdoor moet de klant of medewerker het product zelf correct herkennen en selecteren. Computer vision biedt mogelijkheden om dit proces gedeeltelijk te automatiseren door producten te herkennen op basis van camerabeelden. Eerder onderzoek toont aan dat beeldverwerking en artificiële intelligentie reeds worden toegepast voor het analyseren en classificeren van brood en andere bakkerijproducten \autocite{Olakanmi2023}. Ook binnen een retailomgeving bestaan systemen waarbij producten zonder barcode automatisch worden geclassificeerd op basis van beelden \autocite{Ciapas_2023}.
 
-\begin{itemize}
-  \item kaderen thema
-  \item de doelgroep
-  \item de probleemstelling en (centrale) onderzoeksvraag
-  \item de onderzoeksdoelstelling
-\end{itemize}
+\subsection{Kadering en casus}
 
-Denk er aan: een typische bachelorproef is \textit{toegepast onderzoek}, wat betekent dat je start vanuit een concrete probleemsituatie in bedrijfscontext, een \textbf{casus}. Het is belangrijk om je onderwerp goed af te bakenen: je gaat voor die \textit{ene specifieke probleemsituatie} op zoek naar een goede oplossing, op basis van de huidige kennis in het vakgebied.
+Dit onderzoek vertrekt vanuit een concrete probleemsituatie bij \textbf{Delhaize Ledeberg}. Klanten nemen er zelf een brood uit het broodrek en kunnen dit vervolgens aan de broodmachine snijden en verpakken. Hiervoor zijn verschillende soorten broodzakken beschikbaar. Welke zak gebruikt moet worden, hangt af van het brood. Zo worden onder andere ronde en rechthoekige broden in verschillende zakken verpakt en wordt voor biobroden een afzonderlijke broodzak gebruikt.
 
-De doelgroep moet ook concreet en duidelijk zijn, dus geen algemene of vaag gedefinieerde groepen zoals \emph{bedrijven}, \emph{developers}, \emph{Vlamingen}, enz. Je richt je in elk geval op it-professionals, een bachelorproef is geen populariserende tekst. Eén specifiek bedrijf (die te maken hebben met een concrete probleemsituatie) is dus beter dan \emph{bedrijven} in het algemeen.
+In de praktijk kiezen klanten echter regelmatig een verkeerde broodzak. Hierdoor wordt het voor het kassapersoneel moeilijker om te bepalen welk brood zich in de zak bevindt, waardoor aan de kassa een verkeerd product kan worden geselecteerd. De behoefte van Delhaize Ledeberg bestaat daarom in een systeem dat de klant bij de broodsnijmachine kan helpen bij het kiezen van de juiste broodzak.
 
-Formuleer duidelijk de onderzoeksvraag! De begeleiders lezen nog steeds te veel voorstellen waarin we geen onderzoeksvraag terugvinden.
+Een mogelijke oplossing is een computer-visionsysteem bestaande uit een camera, computer en scherm. Wanneer een klant een brood aan de broodsnijder plaatst, wordt een foto genomen waarop een AI-model het brood analyseert. Vervolgens kan op het scherm worden weergegeven welke broodzak de klant moet gebruiken.
 
-Schrijf ook iets over de doelstelling. Wat zie je als het concrete eindresultaat van je onderzoek, naast de uitgeschreven scriptie? Is het een proof-of-concept, een rapport met aanbevelingen, \ldots Met welk eindresultaat kan je je bachelorproef als een succes beschouwen?
+\subsection{Probleemstelling}
+
+Hoewel het bepalen van de juiste broodzak de directe praktische toepassing vormt, ontstaat hierbij een bredere technische uitdaging. Het assortiment van Delhaize Ledeberg bestaat uit ongeveer vijftig verschillende broodsoorten, waarvan verschillende broden visueel sterk op elkaar lijken. Het systeem moet daarom voldoende visuele kenmerken uit een foto kunnen halen om broden correct van elkaar te kunnen onderscheiden.
+
+Dit kan beschouwd worden als een vorm van \textit{fine-grained image classification} (FGIC), waarbij verschillende klassen slechts kleine visuele verschillen vertonen, terwijl er tegelijkertijd variatie kan bestaan binnen dezelfde klasse \autocite{Wei_2022}. Ook binnen voedselherkenning vormt dit een belangrijke uitdaging voor classificatiemodellen \autocite{Boyd_2024}. Specifiek voor brood tonen eerdere onderzoeken aan dat convolutionele neurale netwerken subtiele visuele verschillen in broodbeelden kunnen herkennen \autocite{Cotrim2020,Tantiphanwadi2022}. Deze onderzoeken richten zich echter voornamelijk op eigenschappen zoals de bruiningsgraad van brood en niet op het onderscheiden van een groot aantal commerciële broodsoorten binnen een winkelomgeving.
+
+Vanuit deze probleemsituatie wordt de volgende centrale onderzoeksvraag opgesteld:
+
+\begin{quote}
+    \textit{In welke mate kunnen bestaande AI-modellen verschillende broodsoorten bij Delhaize Ledeberg accuraat herkennen op basis van foto's?}
+\end{quote}
+
+\subsection{Doelgroep}
+
+De primaire doelgroep van dit onderzoek is \textbf{Delhaize Ledeberg}, met in het bijzonder de eindverantwoordelijken van de winkel. Voor deze bachelorproef is de co-promotor dan ook Denis Reyniers, Store Manager bij zowel Delhaize Ledeberg als Delhaize Sterre. Voor hem moet het onderzoek aantonen of automatische broodherkenning haalbaar is en in welke mate een dergelijk systeem ondersteuning kan bieden bij het kiezen van de juiste broodzak.
+
+De resultaten kunnen daarnaast inzicht geven in een mogelijke verdere toepassing waarbij niet alleen de broodzakcategorie, maar ook de specifieke broodsoort automatisch wordt bepaald. Een effectieve integratie hiervan met bijvoorbeeld het kassasysteem of het afdrukken van een producttickets valt echter buiten de scope van deze bachelorproef.
+
+\subsection{Onderzoeksdoelstelling}
+
+Het doel van deze bachelorproef is om naast een theoretisch antwoord op de onderzoeksvraag ook een werkende \textit{Proof of Concept} (PoC) te ontwikkelen. Hiervoor wordt een dataset opgebouwd met foto's van broodsoorten uit het assortiment van Delhaize Ledeberg. Op basis daarvan worden bestaande AI-modellen getraind en geëvalueerd om na te gaan in welke mate zij de verschillende broden van elkaar kunnen onderscheiden.
+
+Daarbij wordt onderzocht welke modellen geschikt zijn voor deze classificatietaak en welke invloed domeinspecifieke fine-tuning heeft op de nauwkeurigheid. Transfer learning maakt het mogelijk om kennis uit reeds getrainde modellen over te dragen naar een nieuwe taak en is daardoor bijzonder relevant wanneer slechts een beperkte hoeveelheid eigen trainingsdata beschikbaar is \autocite{Zhuang_2021,Abou_Baker_2022}.
+
+Het concrete eindresultaat is een PoC die op basis van een foto een brood analyseert en minstens kan bepalen tot welke broodzakcategorie het behoort. Daarnaast wordt onderzocht in welke mate hetzelfde systeem verder kan gaan en de specifieke broodsoort kan classificeren. Op basis van de behaalde resultaten wordt ten slotte een technisch onderbouwd advies geformuleerd over de haalbaarheid van automatische broodherkenning binnen de concrete context van Delhaize Ledeberg.
 
 %---------- Stand van zaken ---------------------------------------------------
 
@@ -41,7 +60,7 @@ Hier beschrijf je de \emph{state-of-the-art} rondom je gekozen onderzoeksdomein,
 
 Je mag de titel van deze sectie ook aanpassen (literatuurstudie, stand van zaken, enz.). Zijn er al gelijkaardige onderzoeken gevoerd? Wat concluderen ze? Wat is het verschil met jouw onderzoek?
 
-Verwijs bij elke introductie van een term of bewering over het domein naar de vakliteratuur, bijvoorbeeld~\autocite{Hykes2013}! Denk zeker goed na welke werken je refereert en waarom.
+Verwijs bij elke introductie van een term of bewering over het domein naar de vakliteratuur, bijvoorbeeld! Denk zeker goed na welke werken je refereert en waarom.
 
 Draag zorg voor correcte literatuurverwijzingen! Een bronvermelding hoort thuis \emph{binnen} de zin waar je je op die bron baseert, dus niet er buiten! Maak meteen een verwijzing als je gebruik maakt van een bron. Doe dit dus \emph{niet} aan het einde van een lange paragraaf. Baseer nooit teveel aansluitende tekst op eenzelfde bron.
 
