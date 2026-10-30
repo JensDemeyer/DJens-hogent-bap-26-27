@@ -15,7 +15,7 @@
 \section{Inleiding}
 \label{sec:inleiding}
 
-Binnen de retailsector zijn niet alle producten even eenvoudig te identificeren. Voor veel verpakte producten kan gebruikgemaakt worden van een barcode of QR-code, maar bij verse producten zoals brood is dit niet altijd het geval. Hierdoor moet de klant of medewerker het product zelf correct herkennen en selecteren. Computer vision biedt mogelijkheden om dit proces gedeeltelijk te automatiseren door producten te herkennen op basis van camerabeelden. Eerder onderzoek toont aan dat beeldverwerking en artificiële intelligentie reeds worden toegepast voor het analyseren en classificeren van brood en andere bakkerijproducten \autocite{Olakanmi2023}. Ook binnen een retailomgeving bestaan systemen waarbij producten zonder barcode automatisch worden geclassificeerd op basis van beelden \autocite{Ciapas_2023}.
+Binnen de retailsector zijn niet alle producten even eenvoudig te identificeren. Voor veel verpakte producten kan gebruikgemaakt worden van een barcode of QR-code, maar bij verse producten zoals brood of groenten en fruit is dit niet altijd het geval. Hierdoor moet de klant of medewerker het product zelf correct herkennen en selecteren. Computer vision biedt mogelijkheden om dit proces gedeeltelijk te automatiseren door producten te herkennen op basis van camerabeelden.
 
 \subsection{Kadering en casus}
 
@@ -28,8 +28,6 @@ Een mogelijke oplossing is een computer-visionsysteem bestaande uit een camera, 
 \subsection{Probleemstelling}
 
 Hoewel het bepalen van de juiste broodzak de directe praktische toepassing vormt, ontstaat hierbij een bredere technische uitdaging. Het assortiment van Delhaize Ledeberg bestaat uit ongeveer vijftig verschillende broodsoorten, waarvan verschillende broden visueel sterk op elkaar lijken. Het systeem moet daarom voldoende visuele kenmerken uit een foto kunnen halen om broden correct van elkaar te kunnen onderscheiden.
-
-Dit kan beschouwd worden als een vorm van \textit{fine-grained image classification} (FGIC), waarbij verschillende klassen slechts kleine visuele verschillen vertonen, terwijl er tegelijkertijd variatie kan bestaan binnen dezelfde klasse \autocite{Wei_2022}. Ook binnen voedselherkenning vormt dit een belangrijke uitdaging voor classificatiemodellen \autocite{Boyd_2024}. Specifiek voor brood tonen eerdere onderzoeken aan dat convolutionele neurale netwerken subtiele visuele verschillen in broodbeelden kunnen herkennen \autocite{Cotrim2020,Tantiphanwadi2022}. Deze onderzoeken richten zich echter voornamelijk op eigenschappen zoals de bruiningsgraad van brood en niet op het onderscheiden van een groot aantal commerciële broodsoorten binnen een winkelomgeving.
 
 Vanuit deze probleemsituatie wordt de volgende centrale onderzoeksvraag opgesteld:
 
@@ -47,33 +45,46 @@ De resultaten kunnen daarnaast inzicht geven in een mogelijke verdere toepassing
 
 Het doel van deze bachelorproef is om naast een theoretisch antwoord op de onderzoeksvraag ook een werkende \textit{Proof of Concept} (PoC) te ontwikkelen. Hiervoor wordt een dataset opgebouwd met foto's van broodsoorten uit het assortiment van Delhaize Ledeberg. Op basis daarvan worden bestaande AI-modellen getraind en geëvalueerd om na te gaan in welke mate zij de verschillende broden van elkaar kunnen onderscheiden.
 
-Daarbij wordt onderzocht welke modellen geschikt zijn voor deze classificatietaak en welke invloed domeinspecifieke fine-tuning heeft op de nauwkeurigheid. Transfer learning maakt het mogelijk om kennis uit reeds getrainde modellen over te dragen naar een nieuwe taak en is daardoor bijzonder relevant wanneer slechts een beperkte hoeveelheid eigen trainingsdata beschikbaar is \autocite{Zhuang_2021,Abou_Baker_2022}.
+Daarbij wordt onderzocht welke modellen geschikt zijn voor deze classificatietaak en welke invloed fine-tuning heeft op de nauwkeurigheid.
 
 Het concrete eindresultaat is een PoC die op basis van een foto een brood analyseert en minstens kan bepalen tot welke broodzakcategorie het behoort. Daarnaast wordt onderzocht in welke mate hetzelfde systeem verder kan gaan en de specifieke broodsoort kan classificeren. Op basis van de behaalde resultaten wordt ten slotte een technisch onderbouwd advies geformuleerd over de haalbaarheid van automatische broodherkenning binnen de concrete context van Delhaize Ledeberg.
 
 %---------- Stand van zaken ---------------------------------------------------
 
-\section{Literatuurstudie}%
+\section{Literatuurstudie}
 \label{sec:literatuurstudie}
 
-Hier beschrijf je de \emph{state-of-the-art} rondom je gekozen onderzoeksdomein, d.w.z.\ een inleidende, doorlopende tekst over het onderzoeksdomein van je bachelorproef. Je steunt daarbij heel sterk op de professionele \emph{vakliteratuur}, en niet zozeer op populariserende teksten voor een breed publiek. Wat is de huidige stand van zaken in dit domein, en wat zijn nog eventuele open vragen (die misschien de aanleiding waren tot je onderzoeksvraag!)?
+In dit hoofdstuk wordt een eerste overzicht gegeven van de literatuur die relevant is voor dit onderzoek. Aangezien dit een onderzoeksvoorstel betreft, ligt de focus op de bronnen die het probleem van automatische broodherkenning en mogelijke oplossingen onderbouwen. Daarbij wordt eerst gekeken naar bestaande toepassingen van computer vision op brood en bakkerijproducten. Vervolgens wordt ingegaan op de uitdaging om visueel sterk gelijkende producten van elkaar te onderscheiden en op technieken zoals transfer learning en fine-tuning. Tot slot wordt de link gelegd met automatische productherkenning binnen een retailomgeving.
 
-Je mag de titel van deze sectie ook aanpassen (literatuurstudie, stand van zaken, enz.). Zijn er al gelijkaardige onderzoeken gevoerd? Wat concluderen ze? Wat is het verschil met jouw onderzoek?
+\subsection{Het probleem: visuele herkenning van brood}
 
-Verwijs bij elke introductie van een term of bewering over het domein naar de vakliteratuur, bijvoorbeeld! Denk zeker goed na welke werken je refereert en waarom.
+Computer vision wordt al gebruikt om verschillende visuele eigenschappen van brood automatisch te analyseren. \textcite{Olakanmi2023} geven een overzicht van bestaande beeldverwerkingssystemen voor bakkerijproducten en tonen aan dat kenmerken zoals kleur, vorm, grootte en textuur uit beelden kunnen worden afgeleid. Dergelijke kenmerken worden in hun onderzoek gebruikt om de kwaliteit en eigenschappen van brood op een objectieve manier te beoordelen. De auteurs wijzen er op dat de kwaliteit van de beeldopname beïnvloed kan worden door onder andere de gebruikte belichting en camera-opstelling. Een consistente opnameomgeving is daarom belangrijk wanneer beelden automatisch geanalyseerd worden. Dit zijn zaken die we zeker mee kunnen nemen naar dit onderzoek.
 
-Draag zorg voor correcte literatuurverwijzingen! Een bronvermelding hoort thuis \emph{binnen} de zin waar je je op die bron baseert, dus niet er buiten! Maak meteen een verwijzing als je gebruik maakt van een bron. Doe dit dus \emph{niet} aan het einde van een lange paragraaf. Baseer nooit teveel aansluitende tekst op eenzelfde bron.
+Dat neurale netwerken subtiele verschillen tussen brood kunnen leren, werd reeds aangetoond in onderzoek naar de bruiningsgraad van brood. \textcite{Cotrim2020} gebruikten convolutionele neurale netwerken om verschillende stadia  verkleuring van broodkorsten automatisch te herkennen. Ook \textcite{Tantiphanwadi2022} onderzochten de classificatie van verschillende bruiningsstadia van brood en maakten hiervoor gebruik van een vooraf getraind VGG-16-model. Hoewel deze onderzoeken niet gericht zijn op het herkennen van verschillende broodsoorten, tonen ze wel aan dat deep-learningmodellen visuele verschillen tussen verwante broodbeelden kunnen leren.
 
-Als je informatie over bronnen verzamelt in JabRef, zorg er dan voor dat alle nodige info aanwezig is om de bron terug te vinden (zoals uitvoerig besproken in de lessen Research Methods).
+Voor de casus van Delhaize Ledeberg ligt de uitdaging niet bij het bepalen van de kwaliteit of bruiningsgraad van één broodsoort maar bij het onderscheiden van vijftig verschillende broden. Sommige broden verschillen duidelijk in vorm, grootte of samenstelling, terwijl andere soorten visueel sterk op elkaar lijken. Hierdoor sluit het probleem aan bij \textit{fine-grained image classification}. Bij dergelijke classificatietaken moeten modellen onderscheid maken tussen subcategorieën die slechts kleine visuele verschillen vertonen, terwijl er tegelijkertijd variatie kan bestaan tussen verschillende voorbeelden van dezelfde klasse \autocite{Wei_2022}.
 
-% Voor literatuurverwijzingen zijn er twee belangrijke commando's:
-% \autocite{KEY} => (Auteur, jaartal) Gebruik dit als de naam van de auteur
-%   geen onderdeel is van de zin.
-% \textcite{KEY} => Auteur (jaartal)  Gebruik dit als de auteursnaam wel een
-%   functie heeft in de zin (bv. ``Uit onderzoek door Doll & Hill (1954) bleek
-%   ...'')
+Deze uitdaging komt ook voor binnen automatische voedselherkenning. \textcite{Boyd_2024} onderzochten verschillende convolutionele neurale netwerken voor \textit{fine-grained} voedselclassificatie en tonen aan dat de keuze van het model een belangrijke invloed heeft op de uiteindelijke prestaties. Dit maakt het relevant om voor dit onderzoek niet op voorhand één model te kiezen maar verschillende bestaande modellen evalueren op dezelfde dataset.
 
-Je mag deze sectie nog verder onderverdelen in subsecties als dit de structuur van de tekst kan verduidelijken.
+\subsection{De oplossing: transfer learning en domeinspecifieke fine-tuning}
+
+Het verzamelen van een gigantische gelabelde dataset voor ongeveer vijftig broodsoorten is binnen de scope van een Proof of Concept moeilijk haalbaar. Een mogelijke oplossing hiervoor is \textit{transfer learning}. Hierbij wordt kennis die een model tijdens een eerdere training heeft geleerd, hergebruikt voor een nieuwe maar gerelateerde taak. Volgens \textcite{Zhuang_2021} kan transfer learning de afhankelijkheid van grote hoeveelheden gelabelde data voor een nieuwe doeltaak verminderen.
+
+Voor beeldclassificatie kan hiervoor vertrokken worden van modellen die reeds vooraf getraind zijn op grote beelddatasets. In plaats van een volledig model vanaf nul te trainen, kunnen de bestaande modelgewichten verder aangepast worden aan de nieuwe dataset. \textcite{Abou_Baker_2022} vergeleken verschillende neurale netwerken en verschillende strategieën voor transfer learning. Hun resultaten tonen aan dat de prestaties afhankelijk zijn van zowel de gekozen architectuur als de manier waarop het model verder wordt gefinetuned. Dit ondersteunt de keuze om voor deze bachelorproef meerdere bestaande modellen onder vergelijkbare omstandigheden te evalueren.
+
+Ook specifiek voor brood bestaat hiervoor een relevant precedent. \textcite{Tantiphanwadi2022} gebruikten een vooraf getraind VGG-16-model voor de classificatie van broodbeelden met een relatief beperkte trainingsdataset. Zij combineerden transfer learning met fine-tuning en data-augmentatie om het model verder aan te passen aan hun broodbeelden. Hoewel hun classificatietaak beperkt bleef tot verschillende bruiningsstadia, toont dit aan dat transfer learning ook binnen het domein van broodbeelden toegepast kan worden wanneer slechts een beperkte hoeveelheid eigen trainingsdata beschikbaar is.
+
+Voor de casus van Delhaize Ledeberg betekent dit dat een bestaand model als vertrekpunt kan dienen en vervolgens verder gefinetuned kan worden met foto's van de broodsoorten uit de winkel. Op die manier kan onderzocht worden in welke mate domeinspecifieke training noodzakelijk is om visueel sterk gelijkende broden correct van elkaar te onderscheiden.
+
+\subsection{Productherkenning binnen een retailomgeving}
+
+Naast specifiek onderzoek over brood is ook bestaande literatuur over automatische productherkenning in winkels relevant. \textcite{Ciapas_2023} onderzochten een systeem voor het automatisch classificeren van producten zonder barcode aan een zelfscankassa (Groenten, Fruit, Snoepjes, Donuts,...). Hun onderzoek toont aan dat in dergelijke omgevingen bijkomende problemen voorkomen, zoals producten die niet volledig zichtbaar zijn of beelden waarop het product niet duidelijk genoeg aanwezig is. Dit toont aan dat niet alleen het classificatiemodel, maar ook de omstandigheden waarin de beelden worden opgenomen een belangrijke rol spelen.
+
+Binnen de Belgische retailsector bestaat bovendien een praktijkvoorbeeld van een gelijkaardige toepassing. Colruyt Group testte in 2019 een systeem waarbij een camera automatisch groenten en fruit aan de kassa herkende \autocite{ColruytGroup2019}. Het systeem stelde op basis van een foto een product voor, waarna dit door de klant of kassamedewerker bevestigd kon worden. Hoewel deze toepassing gericht was op groenten en fruit en niet op brood, toont ze aan dat cameragebaseerde productherkenning reeds binnen een Belgische supermarktcontext werd onderzocht.
+
+De toepassing bij Delhaize Ledeberg verschilt echter van deze bestaande voorbeelden. Het primaire doel is niet om onmiddellijk een product aan de kassa af te rekenen, maar om de klant aan de broodsnijmachine te ondersteunen bij het kiezen van de juiste broodzak. Hiervoor hoeft het systeem in eerste instantie enkel voldoende informatie uit het broodbeeld te halen om de correcte zakcategorie te bepalen. De Proof of Concept gaat vervolgens een stap verder door te onderzoeken in welke mate ook de specifieke broodsoort automatisch geclassificeerd kan worden.
+
+Uit de literatuur blijkt dus dat de afzonderlijke technische bouwstenen voor een dergelijk systeem al bestaan. Computer vision kan visuele eigenschappen van brood analyseren volgens \autocite{Olakanmi2023}, neurale netwerken kunnen subtiele verschillen tussen broodbeelden leren volgens \autocite{Cotrim2020,Tantiphanwadi2022}, en transfer learning kan gebruikt worden om bestaande modellen aan een nieuwe classificatietaak aan te passen volgens \autocite{Zhuang_2021,Abou_Baker_2022}. Daarnaast bestaan er al toepassingen van automatische productherkenning binnen een retailomgeving \autocite{Ciapas_2023,ColruytGroup2019}. Wat binnen de literatuur echter nog niet wordt behandeld, is de classificatie van een groot aantal visueel gelijkaardige commerciële broodsoorten binnen de concrete omgeving van een supermarkt. Deze combinatie vormt daarom het centrale onderzoeksgebied van deze bachelorproef.
 
 %---------- Methodologie ------------------------------------------------------
 \section{Methodologie}%
