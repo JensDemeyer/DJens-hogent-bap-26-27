@@ -23,7 +23,7 @@ Dit onderzoek vertrekt vanuit een concrete probleemsituatie bij \textbf{Delhaize
 
 In de praktijk kiezen klanten echter regelmatig een verkeerde broodzak. Hierdoor wordt het voor het kassapersoneel moeilijker om te bepalen welk brood zich in de zak bevindt, waardoor aan de kassa een verkeerd product kan worden geselecteerd. De behoefte van Delhaize Ledeberg bestaat daarom in een systeem dat de klant bij de broodsnijmachine kan helpen bij het kiezen van de juiste broodzak.
 
-Een mogelijke oplossing is een computer-visionsysteem bestaande uit een camera, computer en scherm. Wanneer een klant een brood aan de broodsnijder plaatst, wordt een foto genomen waarop een AI-model het brood analyseert. Vervolgens kan op het scherm worden weergegeven welke broodzak de klant moet gebruiken.
+Een mogelijke oplossing is een computer-vision\-sys\-teem bestaande uit een camera, computer en scherm. Wanneer een klant een brood aan de broodsnijder plaatst, wordt een foto genomen waarop een AI-model het brood analyseert. Vervolgens kan op het scherm worden weergegeven welke broodzak de klant moet gebruiken.
 
 \subsection{Probleemstelling}
 
@@ -58,9 +58,9 @@ In dit hoofdstuk wordt een eerste overzicht gegeven van de literatuur die releva
 
 \subsection{Het probleem: visuele herkenning van brood}
 
-Computer vision wordt al gebruikt om verschillende visuele eigenschappen van brood automatisch te analyseren. \textcite{Olakanmi2023} geven een overzicht van bestaande beeldverwerkingssystemen voor bakkerijproducten en tonen aan dat kenmerken zoals kleur, vorm, grootte en textuur uit beelden kunnen worden afgeleid. Dergelijke kenmerken worden in hun onderzoek gebruikt om de kwaliteit en eigenschappen van brood op een objectieve manier te beoordelen. De auteurs wijzen er op dat de kwaliteit van de beeldopname beïnvloed kan worden door onder andere de gebruikte belichting en camera-opstelling. Een consistente opnameomgeving is daarom belangrijk wanneer beelden automatisch geanalyseerd worden. Dit zijn zaken die we zeker mee kunnen nemen naar dit onderzoek.
+Computer vision wordt al gebruikt om verschillende visuele eigenschappen van brood automatisch te analyseren. \textcite{Olakanmi2023} geven een overzicht van bestaande beeldverwerkingssystemen voor bakkerijproducten en tonen aan dat kenmerken zoals kleur, vorm, grootte en textuur uit beelden kunnen worden afgeleid. Dergelijke kenmerken worden in hun onderzoek gebruikt om de kwaliteit en eigenschappen van brood op een objectieve manier te beoordelen. De auteurs wijzen er op dat de kwaliteit van de beeldopname beïnvloed kan worden door onder andere de gebruikte belichting en camera-op\-stel\-ling. Een consistente opnameomgeving is daarom belangrijk wanneer beelden automatisch geanalyseerd worden. Dit zijn zaken die we zeker mee kunnen nemen naar dit onderzoek.
 
-Dat neurale netwerken subtiele verschillen tussen brood kunnen leren, werd reeds aangetoond in onderzoek naar de bruiningsgraad van brood. \textcite{Cotrim2020} gebruikten convolutionele neurale netwerken om verschillende stadia  verkleuring van broodkorsten automatisch te herkennen. Ook \textcite{Tantiphanwadi2022} onderzochten de classificatie van verschillende bruiningsstadia van brood en maakten hiervoor gebruik van een vooraf getraind VGG-16-model. Hoewel deze onderzoeken niet gericht zijn op het herkennen van verschillende broodsoorten, tonen ze wel aan dat deep-learningmodellen visuele verschillen tussen verwante broodbeelden kunnen leren.
+Dat neurale netwerken subtiele verschillen tussen brood kunnen leren, werd reeds aangetoond in onderzoek naar de bruiningsgraad van brood. \textcite{Cotrim2020} gebruikten convolutionele neurale netwerken om verschillende stadia  verkleuring van broodkorsten automatisch te herkennen. Ook \textcite{Tantiphanwadi2022} onderzochten de classificatie van verschillende bruiningsstadia van brood en maakten hiervoor gebruik van een vooraf getraind VGG-16-model. Hoewel deze onderzoeken niet gericht zijn op het herkennen van verschillende broodsoorten, tonen ze wel aan dat deep-learning\-mo\-del\-len visuele verschillen tussen verwante broodbeelden kunnen leren.
 
 Voor de casus van Delhaize Ledeberg ligt de uitdaging niet bij het bepalen van de kwaliteit of bruiningsgraad van één broodsoort maar bij het onderscheiden van vijftig verschillende broden. Sommige broden verschillen duidelijk in vorm, grootte of samenstelling, terwijl andere soorten visueel sterk op elkaar lijken. Hierdoor sluit het probleem aan bij \textit{fine-grained image classification}. Bij dergelijke classificatietaken moeten modellen onderscheid maken tussen subcategorieën die slechts kleine visuele verschillen vertonen, terwijl er tegelijkertijd variatie kan bestaan tussen verschillende voorbeelden van dezelfde klasse \autocite{Wei_2022}.
 
@@ -87,28 +87,47 @@ De toepassing bij Delhaize Ledeberg verschilt echter van deze bestaande voorbeel
 Uit de literatuur blijkt dus dat de afzonderlijke technische bouwstenen voor een dergelijk systeem al bestaan. Computer vision kan visuele eigenschappen van brood analyseren volgens \autocite{Olakanmi2023}, neurale netwerken kunnen subtiele verschillen tussen broodbeelden leren volgens \autocite{Cotrim2020,Tantiphanwadi2022}, en transfer learning kan gebruikt worden om bestaande modellen aan een nieuwe classificatietaak aan te passen volgens \autocite{Zhuang_2021,Abou_Baker_2022}. Daarnaast bestaan er al toepassingen van automatische productherkenning binnen een retailomgeving \autocite{Ciapas_2023,ColruytGroup2019}. Wat binnen de literatuur echter nog niet wordt behandeld, is de classificatie van een groot aantal visueel gelijkaardige commerciële broodsoorten binnen de concrete omgeving van een supermarkt. Deze combinatie vormt daarom het centrale onderzoeksgebied van deze bachelorproef.
 
 %---------- Methodologie ------------------------------------------------------
-\section{Methodologie}%
+\section{Methodologie}
 \label{sec:methodologie}
 
-Hier beschrijf je hoe je van plan bent het onderzoek te voeren. Welke onderzoekstechniek ga je toepassen om elk van je onderzoeksvragen te beantwoorden? Gebruik je hiervoor literatuurstudie, interviews met belanghebbenden (bv.~voor requirements-analyse), experimenten, simulaties, vergelijkende studie, risico-analyse, PoC, \ldots?
+De methodologie van dit onderzoek is opgebouwd rond het ontwikkelen en evalueren van een \textit{Proof of Concept} (PoC) voor automatische broodherkenning bij Delhaize Ledeberg. Het onderzoek wordt opgedeeld in drie grote fasen: het verzamelen van de nodige data, het trainen en evalueren van verschillende modellen en ten slotte het ontwikkelen en testen van de PoC.
 
-Valt je onderwerp onder één van de typische soorten bachelorproeven die besproken zijn in de lessen Research Methods (bv.\ vergelijkende studie of risico-analyse)? Zorg er dan ook voor dat we duidelijk de verschillende stappen terug vinden die we verwachten in dit soort onderzoek!
+\subsection{Fase 1: Dataverzameling en voorbereiding}
+\emph{Tijdsindicatie: november 2026}
 
-Vermijd onderzoekstechnieken die geen objectieve, meetbare resultaten kunnen opleveren. Enquêtes, bijvoorbeeld, zijn voor een bachelorproef informatica meestal \textbf{niet geschikt}. De antwoorden zijn eerder meningen dan feiten en in de praktijk blijkt het ook bijzonder moeilijk om voldoende respondenten te vinden. Studenten die een enquête willen voeren, hebben meestal ook geen goede definitie van de populatie, waardoor ook niet kan aangetoond worden dat eventuele resultaten representatief zijn.
+In de eerste fase wordt de literatuurstudie verder uitgebreid. Hierbij wordt gekeken welke modellen in gelijkaardige onderzoeken gebruikt worden en welke bestaande datasets van brood of gelijkaardige producten bruikbaar kunnen zijn voor transfer learning.
 
-Uit dit onderdeel moet duidelijk naar voor komen dat je bachelorproef ook technisch voldoen\-de diepgang zal bevatten. Het zou niet kloppen als een bachelorproef informatica ook door bv.\ een student marketing zou kunnen uitgevoerd worden.
+Daarnaast wordt een eigen dataset opgebouwd bij Delhaize Ledeberg. Het assortiment bestaat uit ongeveer vijftig verschillende broodsoorten. De literatuurstudie gaat bepalen hoeveel foto's er precies nodig zijn maar voor nu wordt er gestreefd naar 10 tot 20 verschillende fysieke exemplaren per broodsoort, waarvan telkens ongeveer vijf foto's worden genomen. DIt komt op een totaal aantal foto's van 2500 tot 5000. Hierbij wordt gevarieerd in onder andere de hoek, positie en belichting. De foto's worden tijdens het verzamelen gekoppeld aan de juiste broodsoort en broodzakcategorie.
 
-Je beschrijft ook al welke tools (hardware, software, diensten, \ldots) je denkt hiervoor te gebruiken of te ontwikkelen.
+De belangrijkste deliverables van deze fase zijn een gelabelde Delhaize-dataset, een selectie van bestaande datasets voor transfer learning en een selectie van AI-modellen die verder onderzocht zullen worden.
 
-Probeer ook een tijdschatting te maken. Hoe lang zal je met elke fase van je onderzoek bezig zijn en wat zijn de concrete \emph{deliverables} in elke fase?
+\subsection{Fase 2: Training en evaluatie}
+\emph{Tijdsindicatie: eind november tot midden december 2026}
+
+Eenmaal de dataset beschikbaar is, worden de geselecteerde modellen getraind en geëvalueerd. Hierbij wordt gebruikgemaakt van transfer learning en fine-tuning. Er wordt ook onderzocht of een extra trainingsstap op een bestaande dataset van brood of gelijkaardige producten een verbetering oplevert.
+
+Omdat de dataset uit enkele duizenden foto's kan bestaan en meerdere modellen getraind moeten worden, is er hier voldoende rekenkracht voor nodig. Indien mijn persoonlijke laptop hiervoor niet volstaat, wordt onderzocht of trainingshardware beschikbaar is via het VIC (\textit{Virtual IT Company}) van HOGENT of via Azure of AWS.
+
+De modellen worden onder dezelfde omstandigheden met elkaar vergeleken. Hierbij wordt enerzijds gekeken hoe accuraat ze de specifieke broodsoort kunnen classificeren en anderzijds of ze de juiste broodzakcategorie kunnen bepalen. Ook wordt bekeken welke broodsoorten vaak met elkaar verward worden.
+
+De belangrijkste deliverables van deze fase zijn de getrainde modellen, de evaluatieresultaten en een selectie van het best presterende model voor de PoC.
+
+\subsection{Fase 3: Proof of Concept en praktijktest}
+\emph{Tijdsindicatie: midden december 2026 tot 8 januari 2027}
+
+Het best presterende model wordt geïntegreerd in een eenvoudige PoC bestaande uit een camera, computer en scherm. Wanneer een brood voor de camera wordt geplaatst, wordt een foto genomen en toont het systeem welke broodzak gebruikt moet worden. Daarnaast wordt ook onderzocht of de specifieke broodsoort correct herkend kan worden.
+
+Indien dit praktisch mogelijk is, wordt de PoC vervolgens getest bij de broodsnijmachine van Delhaize Ledeberg. Hierdoor kan nagegaan worden of de resultaten uit de testdataset ook standhouden in de echte winkelomgeving. In dezelfde periode worden de resultaten verwerkt en wordt de bachelorproef verder uitgeschreven.
+
+De belangrijkste deliverables van deze fase zijn een werkende PoC, de resultaten van de praktijktest en een technisch onderbouwd advies voor Delhaize Ledeberg over de haalbaarheid van automatische broodherkenning.
 
 %---------- Verwachte resultaten ----------------------------------------------
-\section{Verwacht resultaat, conclusie}%
+\section{Verwacht resultaat, conclusie}
 \label{sec:verwachte_resultaten}
 
-Hier beschrijf je welke resultaten je verwacht. Als je metingen en simulaties uitvoert, kan je hier al mock-ups maken van de grafieken samen met de verwachte conclusies. Benoem zeker al je assen en de onderdelen van de grafiek die je gaat gebruiken. Dit zorgt ervoor dat je concreet weet welk soort data je moet verzamelen en hoe je die moet meten.
+Het verwachte resultaat van dit onderzoek is een werkende Proof of Concept. De verwachting is dat vooral het bepalen van de juiste broodzakcategorie haalbaar zal zijn, aangezien de broden hiervoor slechts in een beperkt aantal categorieën moeten worden ingedeeld.
 
-Wat heeft de doelgroep van je onderzoek aan het resultaat? Op welke manier zorgt jouw bachelorproef voor een meerwaarde?
+Het herkennen van de specifieke broodsoort zal waarschijnlijk moeilijker zijn aangezien er zoveel soorten zijn. Het onderzoek zal moeten uitwijzen met welke nauwkeurigheid deze van elkaar onderscheiden kunnen worden.
 
-Hier beschrijf je wat je verwacht uit je onderzoek, met de motivatie waarom. Het is \textbf{niet} erg indien uit je onderzoek andere resultaten en conclusies vloeien dan dat je hier beschrijft: het is dan juist interessant om te onderzoeken waarom jouw hypothesen niet overeenkomen met de resultaten.
+Voor Delhaize Ledeberg moet het onderzoek aantonen of automatische broodherkenning in de praktijk een oplossing kan bieden voor het foutief kiezen van broodzakken. Indien de PoC goede resultaten behaalt, kan dit een basis vormen voor een verdere uitwerking binnen Delhaize Ledeberg en eventueel andere winkels.
 

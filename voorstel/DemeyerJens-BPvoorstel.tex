@@ -11,6 +11,20 @@
 % Invoegen bibliografiebestand
 \addbibresource{voorstel.bib}
 
+% Montserrat is breed: extra rekruimte voorkomt tekst die in de marge loopt
+\emergencystretch=3em
+% Laat lange URL's/DOI's in de bibliografie overal afbreken
+\setcounter{biburlnumpenalty}{100}
+\setcounter{biburlucpenalty}{100}
+\setcounter{biburllcpenalty}{100}
+% Afbreekpunten voor lange samenstellingen
+\hyphenation{brood-zak-ca-te-go-rie brood-her-ken-ning brood-snij-ma-chi-ne
+  clas-si-fi-ca-tie-taak clas-si-fi-ca-tie-ta-ken beeld-ver-wer-kings-sys-te-men
+  pro-duct-her-ken-ning voed-sel-her-ken-ning voed-sel-clas-si-fi-ca-tie
+  ret-ail-om-ge-ving ret-ail-sec-tor zelf-scan-kas-sa op-na-me-om-ge-ving
+  trai-nings-da-ta-set trai-nings-hard-ware
+  su-per-markt-con-text win-kel-om-ge-ving kas-sa-me-de-wer-ker}
+
 % Informatie over de opleiding, het vak en soort opdracht
 \studyprogramme{Professionele bachelor toegepaste informatica}
 \course{Bachelorproef}
@@ -29,8 +43,8 @@
 \author{Demeyer Jens}
 \email{jens.demeyer@student.hogent.be}
 
-% TODO: Geef de co-promotor op
 \supervisor[Co-promotor]{D. Reyniers (Delhaize Ledeberg, \href{mailto:denis@delhaize-ledeberg.be}{denis@delhaize-ledeberg.be})}
+\projectrepo{https://github.com/JensDemeyer/DJens-hogent-bap-26-27}
 
 % Binnen welke specialisatierichting uit 3TI situeert dit onderzoek zich?
 % Kies uit deze lijst:
@@ -49,7 +63,7 @@
 \begin{document}
 
 \begin{abstract}
-  Hier schrijf je de samenvatting van je voorstel, als een doorlopende tekst van één paragraaf. Let op: dit is geen inleiding, maar een samenvattende tekst van heel je voorstel met inleiding (voorstelling, kaderen thema), probleemstelling en centrale onderzoeksvraag, onderzoeksdoelstelling (wat zie je als het concrete resultaat van je bachelorproef?), voorgestelde methodologie, verwachte resultaten en meerwaarde van dit onderzoek (wat heeft de doelgroep aan het resultaat?).
+    Het correct identificeren van brood vormt bij Delhaize Ledeberg een praktisch probleem doordat klanten regelmatig een verkeerde broodzak kiezen, waardoor het voor kassapersoneel moeilijker wordt om het juiste brood te herkennen aan de kassa. Deze bachelorproef onderzoekt daarom in welke mate bestaande AI-modellen verschillende broodsoorten accuraat kunnen herkennen. Hiervoor wordt een eigen dataset opgebouwd met beelden van de verschillende broodsoorten uit het assortiment van Delhaize Ledeberg. Verschillende modellen worden met behulp van transfer learning en fine-tuning getraind en geëvalueerd, zowel op het herkennen van de specifieke broodsoort als op het bepalen van de juiste broodzakcategorie. Het best presterende model wordt verwerkt in een Proof of Concept en wordt getest in de winkelomgeving. De verwachting is dat het bepalen van de juiste broodzakcategorie haalbaar is, terwijl het onderscheiden van sterk gelijkende broodsoorten een grotere uitdaging vormt. Het onderzoek moet Delhaize Ledeberg uiteindelijk een technisch onderbouwd beeld geven van de haalbaarheid van automatische broodherkenning en de mogelijkheden voor een verdere implementatie.
 \end{abstract}
 
 \tableofcontents
