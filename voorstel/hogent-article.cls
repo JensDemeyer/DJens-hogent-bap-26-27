@@ -379,7 +379,7 @@
 %% Section headers
 \titleformat{\section}
 {\Large\titlefont}
-{\bfseries\thesection.\ }
+{\bfseries\color{title}\thesection.\ }
 {0pt}
 {\bfseries\color{title}}
 

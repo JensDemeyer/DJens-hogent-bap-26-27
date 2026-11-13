@@ -30,8 +30,9 @@ Om hier een antwoord op te geven, wordt het onderzoek opgesplitst in volgende de
 
 \medskip\noindent\textbf{Probleemdomein}\par\nopagebreak\smallskip
 \begin{itemize}\raggedright
-\item Welke visuele kenmerken onderscheiden de verschillende broodsoorten en broodzakcategorieën bij Delhaize Ledeberg van elkaar?
-\item Welke omstandigheden tijdens het fotograferen, zoals belichting, camerahoek, positie en gedeeltelijke bedekking, kunnen de herkenning van broden beïnvloeden?
+\item Welke visuele kenmerken onderscheiden de verschillende broodsoorten en broodzakcategorieën van elkaar?
+\item In welke mate beïnvloeden variërende lichtomstandigheden tijdens het fotograferen de herkenning van broden?
+\item Wat is het effect van gedeeltelijke bedekking op de herkenningsnauwkeurigheid van broden?
 \end{itemize}
 
 \medskip\noindent\textbf{Oplossingsdomein}\par\nopagebreak\smallskip
@@ -95,6 +96,7 @@ Uit de literatuur blijkt dus dat de afzonderlijke technische bouwstenen voor een
 
 %---------- Methodologie ------------------------------------------------------
 
+
 \section{Methodologie}
 \label{sec:methodologie}
 
@@ -105,27 +107,29 @@ De methodologie van dit onderzoek is opgebouwd rond het ontwikkelen en evalueren
 
 In de eerste fase wordt de literatuurstudie verder uitgebreid. Hierbij wordt gekeken welke modellen in gelijkaardige onderzoeken gebruikt worden en welke bestaande datasets van brood of gelijkaardige producten bruikbaar kunnen zijn voor transfer learning.
 
-Daarnaast wordt een eigen dataset opgebouwd bij Delhaize Ledeberg. Het assortiment bestaat uit ongeveer vijftig verschillende broodsoorten. De literatuurstudie gaat bepalen hoeveel foto's er precies nodig zijn maar voor nu wordt er gestreefd naar 10 tot 20 verschillende fysieke exemplaren per broodsoort, waarvan telkens ongeveer vijf foto's worden genomen. DIt komt op een totaal aantal foto's van 2500 tot 5000. Hierbij wordt gevarieerd in onder andere de hoek, positie en belichting. De foto's worden tijdens het verzamelen gekoppeld aan de juiste broodsoort en broodzakcategorie.
+Daarnaast wordt een eigen dataset opgebouwd bij Delhaize Ledeberg. Het assortiment bestaat uit ongeveer vijftig verschillende broodsoorten. De literatuurstudie gaat bepalen hoeveel foto's er precies nodig zijn maar voor nu wordt er gestreefd naar 10 tot 20 verschillende fysieke exemplaren per broodsoort, waarvan telkens ongeveer vijf foto's worden genomen. Dit komt op een totaal aantal foto's van 2500 tot 5000. De foto's worden tijdens het verzamelen gekoppeld aan de juiste broodsoort en broodzakcategorie.
 
-De belangrijkste deliverables van deze fase zijn een gelabelde Delhaize-dataset, een selectie van bestaande datasets voor transfer learning en een selectie van AI-modellen die verder onderzocht zullen worden.
+Om de deelvragen uit het probleemdomein te beantwoorden, worden ook afzonderlijke testcondities voorzien. Naast foto's onder normale omstandigheden worden beelden gemaakt met variërende lichtomstandigheden en met gedeeltelijk bedekte broden. Hierdoor kan het effect van licht en bedekking later afzonderlijk vergeleken worden met de normale beelden.
+
+De belangrijkste deliverables van deze fase zijn een gelabelde Delhaize-dataset, afzonderlijke testsets voor lichtvariatie en gedeeltelijke bedekking, een selectie van bestaande datasets voor transfer learning en een selectie van AI-modellen die verder onderzocht zullen worden.
 
 \subsection{Fase 2: Training en evaluatie}
 \emph{Tijdsindicatie: eind november tot midden december 2026}
 
-Eenmaal de dataset beschikbaar is, worden de geselecteerde modellen getraind en geëvalueerd. Hierbij wordt gebruikgemaakt van transfer learning en fine-tuning. Er wordt ook onderzocht of een extra trainingsstap op een bestaande dataset van brood of gelijkaardige producten een verbetering oplevert.
+Eenmaal de dataset beschikbaar is, worden de gekozen modellen getraind en geëvalueerd. Eerst worden ze getest met een basisaanpak zonder domeinspecifieke fine-tuning en daarna met fine-tuning op de Delhaize-dataset. Door deze resultaten te vergelijken wordt de deelvraag uit het oplossingsdomein beantwoord.
 
-Omdat de dataset uit enkele duizenden foto's kan bestaan en meerdere modellen getraind moeten worden, is er hier voldoende rekenkracht voor nodig. Indien mijn persoonlijke laptop hiervoor niet volstaat, wordt onderzocht of trainingshardware beschikbaar is via het VIC (\textit{Virtual IT Company}) van HOGENT of via Azure of AWS.
+Omdat de dataset uit enkele duizenden foto's kan bestaan en meerdere modellen getraind moeten worden, is er voldoende rekenkracht nodig. Indien mijn persoonlijke laptop hiervoor niet volstaat, wordt onderzocht of trainingshardware beschikbaar is via het VIC (textit\{Virtual IT Company\}) van HOGENT of via Azure of AWS.
 
-De modellen worden onder dezelfde omstandigheden met elkaar vergeleken. Hierbij wordt enerzijds gekeken hoe accuraat ze de specifieke broodsoort kunnen classificeren en anderzijds of ze de juiste broodzakcategorie kunnen bepalen. Ook wordt bekeken welke broodsoorten vaak met elkaar verward worden.
+De modellen worden onder dezelfde omstandigheden met elkaar vergeleken. Hierbij wordt enerzijds gekeken hoe accuraat ze de specifieke broodsoort kunnen classificeren en anderzijds of ze de juiste broodzakcategorie kunnen bepalen. De resultaten op de afzonderlijke testsets worden gebruikt om te bepalen welke invloed de ruisfactoren hebben op de herkenningsnauwkeurigheid.
 
-De belangrijkste deliverables van deze fase zijn de getrainde modellen, de evaluatieresultaten en een selectie van het best presterende model voor de PoC.
+De belangrijkste deliverables van deze fase zijn de getrainde modellen, de antwoorden op de deelvragen, de evaluatieresultaten en een selectie van het best presterende model voor de PoC.
 
 \subsection{Fase 3: Proof of Concept en praktijktest}
 \emph{Tijdsindicatie: midden december 2026 tot 8 januari 2027}
 
 Het best presterende model wordt geïntegreerd in een eenvoudige PoC bestaande uit een camera, computer en scherm. Wanneer een brood voor de camera wordt geplaatst, wordt een foto genomen en toont het systeem welke broodzak gebruikt moet worden. Daarnaast wordt ook onderzocht of de specifieke broodsoort correct herkend kan worden.
 
-Indien dit praktisch mogelijk is, wordt de PoC vervolgens getest bij de broodsnijmachine van Delhaize Ledeberg. Hierdoor kan nagegaan worden of de resultaten uit de testdataset ook standhouden in de echte winkelomgeving. In dezelfde periode worden de resultaten verwerkt en wordt de bachelorproef verder uitgeschreven.
+Indien dit praktisch mogelijk is, wordt de PoC vervolgens getest bij de broodsnijmachine van Delhaize Ledeberg. Hierdoor kan nagegaan worden of de resultaten uit de testdatasets ook standhouden in de echte winkelomgeving. In dezelfde periode worden de antwoorden op de deelvragen en de overige resultaten verwerkt in de bachelorproef.
 
 De belangrijkste deliverables van deze fase zijn een werkende PoC, de resultaten van de praktijktest en een technisch onderbouwd advies voor Delhaize Ledeberg over de haalbaarheid van automatische broodherkenning.
 
