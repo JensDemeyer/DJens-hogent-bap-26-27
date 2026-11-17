@@ -1,51 +1,270 @@
 \chapter{\IfLanguageName{dutch}{Stand van zaken}{State of the art}}%
 \label{ch:stand-van-zaken}
 
-% Tip: Begin elk hoofdstuk met een paragraaf inleiding die beschrijft hoe
-% dit hoofdstuk past binnen het geheel van de bachelorproef. Geef in het
-% bijzonder aan wat de link is met het vorige en volgende hoofdstuk.
 
-% Pas na deze inleidende paragraaf komt de eerste sectiehoofding.
+Waar het vorige hoofdstuk de praktische nood bij Delhaize Ledeberg schetste voor een
+camera aan de broodsnijmachine die de klant vertelt welke broodzak hij moet
+gebruiken, onderzoekt dit hoofdstuk de technische achtergrond die nodig is om die
+nood in te vullen. Het automatisch herkennen van een brood op basis van
+een foto kent daarbij twee niveaus. Het praktische minimumdoel is om te bepalen in
+welke \emph{broodzakcategorie} een brood thuishoort. Wat een relatief grofmazige
+indeling is naargelang de vorm of het onderscheid tussen gewone broden en
+biobroden. Een verdergaand en theoretischer doel is om de \emph{specifieke broodsoort}
+te onderscheiden, wat gezien het assortiment van ongeveer vijftig soorten een veel fijnmaziger classificatieprobleem vormt.
 
-Dit hoofdstuk bevat je literatuurstudie. De inhoud gaat verder op de inleiding, maar zal het onderwerp van de bachelorproef *diepgaand* uitspitten. De bedoeling is dat de lezer na lezing van dit hoofdstuk helemaal op de hoogte is van de huidige stand van zaken (state-of-the-art) in het onderzoeksdomein. Iemand die niet vertrouwd is met het onderwerp, weet nu voldoende om de rest van het verhaal te kunnen volgen, zonder dat die er nog andere informatie moet over opzoeken \autocite{Pollefliet2011}.
 
-Je verwijst bij elke bewering die je doet, vakterm die je introduceert, enz.\ naar je bronnen. In \LaTeX{} kan dat met het commando \texttt{$\backslash${textcite\{\}}} of \texttt{$\backslash${autocite\{\}}}. Als argument van het commando geef je de ``sleutel'' van een ``record'' in een bibliografische databank in het Bib\LaTeX{}-formaat (een tekstbestand). Als je expliciet naar de auteur verwijst in de zin (narratieve referentie), gebruik je \texttt{$\backslash${}textcite\{\}}. Soms is de auteursnaam niet expliciet een onderdeel van de zin, dan gebruik je \texttt{$\backslash${}autocite\{\}} (referentie tussen haakjes). Dit gebruik je bv.~bij een citaat, of om in het bijschrift van een overgenomen afbeelding, broncode, tabel, enz. te verwijzen naar de bron. In de volgende paragraaf een voorbeeld van elk.
+Om beide niveaus wetenschappelijk te kaderen, bouwt dit hoofdstuk stap voor stap op.
+Eerst wordt besproken hoe computervisie vandaag wordt ingezet om brood en andere
+voedingsproducten te herkennen, en waarom het onderscheiden van gelijkende
+broodsoorten een apart, fijnmazig probleem is. Vervolgens worden de twee mogelijke
+taakvormen --- beeldclassificatie en objectdetectie --- tegenover elkaar geplaatst.
+Daarna komt transfer learning aan bod als techniek om ook met een beperkte dataset
+bruikbare modellen te trainen, gevolgd door de vraag hoe groot de zelf te verzamelen
+dataset moet zijn en hoe data-augmentatie daarbij kan helpen.
 
-\textcite{Knuth1998} schreef een van de standaardwerken over sorteer- en zoekalgoritmen. Experten zijn het erover eens dat cloud computing een interessante opportuniteit vormen, zowel voor gebruikers als voor dienstverleners op vlak van informatietechnologie~\autocite{Creeger2009}.
 
-Let er ook op: het \texttt{cite}-commando voor de punt, dus binnen de zin. Je verwijst meteen naar een bron in de eerste zin die erop gebaseerd is, dus niet pas op het einde van een paragraaf.
+\section{Computer vision voor brood en voedingsproducten}
 
-\begin{figure}
-  \centering
-  \includegraphics[width=0.8\textwidth]{grail.jpg}
-  \caption[Voorbeeld figuur.]{\label{fig:grail}Voorbeeld van invoegen van een figuur. Zorg altijd voor een uitgebreid bijschrift dat de figuur volledig beschrijft zonder in de tekst te moeten gaan zoeken. Vergeet ook je bronvermelding niet!}
-\end{figure}
 
-\begin{listing}
-  \begin{minted}{python}
-    import pandas as pd
-    import seaborn as sns
+Voordat een systeem een brood kan herkennen, moet het bepalen welke visuele kenmerken
+het daarvoor gebruikt. \textcite{Olakanmi2023} geven in hun onderzoek een
+beeld van hoe computervisie vandaag wordt ingezet om brood en andere bakproducten te
+beoordelen. Beeldsystemen baseren zich daarbij op eigenschappen als kleur, textuur,
+grootte en vorm om een product te typeren. Diezelfde review wijst er echter op dat
+zulke systemen gevoelig zijn voor verstorende factoren zoals belichting, vocht en
+ruis~\autocite{Olakanmi2023}. Dit zijn sommige omstandigheden die ook in een winkel voorkomen en waarmee ons systeem zal moeten kunnen omgaan.
 
-    penguins = sns.load_dataset('penguins')
-    sns.relplot(data=penguins, x="flipper_length_mm", y="bill_length_mm", hue="species")
-  \end{minted}
-  \caption[Voorbeeld codefragment]{Voorbeeld van het invoegen van een codefragment.}
-\end{listing}
 
-\lipsum[7-20]
+Dat computers die visuele kenmerken daadwerkelijk kunnen leren, blijkt uit eerder
+broodonderzoek. Zowel \textcite{Cotrim2020} als \textcite{Tantiphanwadi2022} slagen
+erin om met convolutionele neurale netwerken (CNN's) de bruiningsgraad van brood te
+herkennen, een taak waarbij een brood in enkele duidelijk verschillende stadia wordt
+ingedeeld. Dit soort grofmazige classificatie, met een beperkt aantal goed te
+onderscheiden klassen, sluit sterk aan bij ons praktisch minimumdoel: ook daar
+volstaat het om een brood in een van enkele verschillende
+broodzakcategorieën te plaatsen.
+
+
+Herkenning in een realistische retailcontext is echter een stuk
+lastiger. \textcite{Ciapas2023} bouwen een classificatiesysteem voor producten zonder
+barcode aan de zelfscankassa (groenten, fruit, snoep,...) en botsen daarbij op typische moeilijkheden: producten
+die deels bedekt zijn door de handen van de klant of in zakjes
+zitten, en het ontbreken van een bruikbare publieke dataset. In dezelfde lijn
+vergelijken \textcite{Boyd2024} meerdere CNN-architecturen voor het herkennen van
+afzonderlijke voedingsproducten, en ontwikkelen \textcite{Schmitt2025} met de
+Semmeldetector een systeem dat bakproducten (croissants, koeken, brood,...) in een beeld herkent, telt en van elkaar
+onderscheidt. Opvallend is dat alle drie de onderzoeken vaststellen dat
+bestaande datasets de afzonderlijke producten onvoldoende fijn opsplitsen, wat telkens een eigen dataset noodzakelijk maakt.
+
+
+Een brood toewijzen aan een brede broodzakcategorie lijkt sterk op de grofmazige taken die in
+eerder broodonderzoek al succesvol bleken. De specifieke broodsoort bepalen is
+daarentegen verwant aan de moeilijkere, fijnmazige productherkenning, waar klassen
+sterk op elkaar kunnen lijken. Dit wordt later verder in detail besproken.
+
+
+\subsection{Broodsoorten onderscheiden als fijnmazig probleem}
+
+
+Het onderscheiden van sterk gelijkende broodsoorten sluit nauw aan bij wat in de
+literatuur \emph{fine-grained} (fijnmazige) beeldherkenning heet. \textcite{Wei2022}
+omschrijven dit als het probleem waarbij de klassen onderling sterk op elkaar lijken, de zogenaamde kleine inter-class-variatie, terwijl de exemplaren binnen
+eenzelfde klasse juist sterk kunnen verschillen. Wat men grote intra-class-variatie
+noemt. Vertaald naar brood komt dat neer op dit:
+Enerzijds kunnen twee verschillende broodsoorten bijna identiek ogen en soms enkel
+verschillen in de textuur van de korst of de zaadjes erop. Anderzijds zien twee broden
+van exact dezelfde soort er door het bakproces nooit helemaal hetzelfde uit.
+
+
+Dat verklaart meteen waarom onze twee herkenningsniveaus niet even moeilijk zijn. Een
+brood indelen in een brede broodzakcategorie is relatief grofmazig, omdat die
+categorieën onderling duidelijker verschillen. De exacte broodsoort bepalen is een
+typisch fine-grained probleem, waarbij het model subtiele details moet oppikken om
+zeer gelijkende soorten uit elkaar te houden.
+
+
+\section{Beeldclassificatie versus objectdetectie}
+
+
+Een tweede fundamentele keuze betreft het soort computervisietaak. \textcite{Liu_2022}
+omschrijven beeldclassificatie als het toekennen van één label aan een volledig beeld.
+Objectdetectie gaat een stap verder: daar worden objecten in een beeld eerst
+\emph{gelokaliseerd}, met een kader errond, en vervolgens geclassificeerd. Een
+voorbeeld hiervan is de Semmeldetector van \textcite{Schmitt2025}, die bakproducten
+niet alleen herkent maar ze ook in het beeld lokaliseert en telt. Classificatie geeft
+dus één antwoord per beeld, terwijl detectie bepaalt \emph{waar} zich \emph{welk}
+object bevindt.
+
+
+In onze opstelling wordt het brood vanuit een vast camerastandpunt aan de
+broodsnijmachine gefotografeerd, telkens op een semi-voorspelbare positie en in principe
+met één exemplaar per beeld. Onder die voorwaarden voegt de lokalisatie van
+objectdetectie weinig toe: er hoeft niets geteld of gesitueerd te worden, enkel het
+juiste label bepaald, onafhankelijk of dat label nu een broodzakcategorie of een specifieke
+broodsoort is. Voor beide herkenningsniveaus is beeldclassificatie daarom theoretisch
+de eenvoudigste en meest directe keuze, ook omdat dit minder calculaties vergt en
+minder annotatiewerk vraagt.
+
+
+Toch worden in dit onderzoek beide taken experimenteel getest. Dit om de oplossingsdeelvraag te beantwoorden over welk model het meest geschikt is. Bovendien zijn reële beelden zelden ideaal: \textcite{Ciapas2023} tonen
+dat producten in de praktijk vaak deels bedekt zijn, bijvoorbeeld doordat de klant het
+brood vasthoudt. Een detector die het brood eerst lokaliseert en van de achtergrond
+scheidt, kan in zulke rommelige omstandigheden alsnog meerwaarde bieden.
+
+
+Een praktisch voordeel is dat beide sporen grotendeels op dezelfde beelden kunnen
+steunen. Dezelfde ruwe foto's dienen zowel voor classificatie als voor detectie; enkel
+de annotatie verschilt. Voor classificatie volstaat één label per beeld, terwijl
+objectdetectie vereist dat elk brood bijkomend met een \emph{bounding box} wordt
+afgebakend. Eén set opnames levert zo twee datasets op, al brengt het detectiespoor
+extra annotatiewerk met zich mee.
+
+
+\section{Transfer learning en beperkte datasets}
+
+
+Het trainen van een diep neuraal netwerk vanaf nul vereist doorgaans immens grote
+hoeveelheden gelabelde data. Transfer learning biedt hiervoor een uitweg.
+\textcite{Zhuang2021} beschrijven het als het hergebruiken van kennis uit een
+brondomein om het leren in een verwant doeldomein te verbeteren. Concreet betekent dit
+dat een netwerk dat al op een grote dataset zoals ImageNet is getraind, en daar
+algemene visuele kenmerken zoals randen, texturen en vormen heeft geleerd, als
+vertrekpunt dient en vervolgens op de eigen, kleinere dataset wordt bijgesteld.
+
+
+Welk voorgetraind model het best past, is geen triviale keuze. \textcite{AbouBaker2022}
+evalueren elf voorgetrainde ImageNet-netwerken op vijf doeldomeinen en beoordelen ze
+niet alleen op nauwkeurigheid, maar ook op trainingstijd en modelgrootte. Zij
+benadrukken dat veel studies uitsluitend op nauwkeurigheid focussen en andere, voor de
+praktijk belangrijke eigenschappen verwaarlozen~\autocite{AbouBaker2022}. Voor onze
+casus is dat zeer relevant: de klant aan de broodsnijmachine mag niet lang
+wachten, waardoor de modelkeuze ook door inferentiesnelheid en modelomvang wordt
+bepaald en niet enkel door de hoogst behaalde nauwkeurigheid.
+
+
+Dat transfer learning ook in een broodcontext met weinig data werkt, blijkt opnieuw uit
+het werk van \textcite{Tantiphanwadi2022}. Zij combineren een voorgetraind
+VGG-16-netwerk met fine-tuning en data-augmentatie, en behalen zo sterke resultaten op
+een kleine brooddataset. \textcite{Cotrim2020} komen met compacte CNN's tot een
+vergelijkbare vaststelling. Samen bevestigen ze dat zorgvuldig opgezette CNN's in
+dit domein geen massale datasets nodig hebben, wat voor een bachelorproef met beperkte
+middelen een belangrijke voorwaarde is.
+
+
+\section{Omvang van de eigen dataset}
+
+
+Een belangrijke vraag bij het opzetten van dit computervisie-experiment is hoeveel
+beelden er precies nodig zijn. Daarop bestaat geen algemeen, vast antwoord: de
+benodigde hoeveelheid data hangt af van de taak, de variatie in de beelden, de
+gelijkenis tussen de klassen en het gekozen model \autocite{Shorten2019}.
+
+
+Omdat onze casus specifiek de broodsoorten van Delhaize Ledeberg betreft en er zoals
+eerder bleek vermeld, geen publieke dataset bestaat die deze soorten als afzonderlijke
+klassen bevat~\autocite{Schmitt2025,Ciapas2023}, stellen we zelf een dataset samen. We
+leggen die beelden bewust vast op het niveau van de specifieke broodsoort. Dat is een
+doordachte ontwerpkeuze: door elke broodsoort aan de juiste broodzak te koppelen, kan
+dezelfde dataset later zowel voor broodsoortclassificatie als voor de afgeleide,  broodzakcategorie worden gebruikt. Een fijnmazig gelabelde dataset laat
+zich immers altijd terugbrengen naar een grovere indeling, maar niet omgekeerd.
+
+
+Hoeveel beelden per soort zinvol zijn, kunnen we het best inschatten door naar
+vergelijkbaar onderzoek te kijken. De studies die eerder in dit hoofdstuk aan bod
+kwamen, verschillen daarin sterk. \textcite{Tantiphanwadi2022} classificeerden
+broodbeelden in drie bruiningsstadia met VGG-16 transfer learning en fine-tuning, en
+gebruikten daarvoor 900 originele trainingsbeelden, oftewel 300 per klasse; dit is
+brood-specifiek en een classificatietaak, maar met veel minder klassen dan onze
+broodsoorten. \textcite{Schmitt2025} onderscheidden met hun Semmeldetector achttien
+soorten bakproducten op basis van slechts 1\,151 originele beelden, die ze via een
+copy-paste-techniek sterk uitbreidden; dit onderzoek ligt inhoudelijk dicht bij het
+onze, maar betreft objectdetectie. \textcite{Boyd2024} onderzochten fijnmazige
+voedselherkenning over twintig voedselklassen met meerdere CNN-architecturen, en
+beschikten daarvoor over een veel grotere dataset van 41\,949 beelden; net als onze
+broodsoorttaak proberen zij sterk gelijkende voedselklassen te onderscheiden, zij het
+met aanzienlijk meer data. Tabel~\ref{tab:datasetomvang} zet deze
+studies naast elkaar.
+
 
 \begin{table}
-  \centering
-  \begin{tabular}{lcr}
-    \toprule
-    \textbf{Kolom 1} & \textbf{Kolom 2} & \textbf{Kolom 3} \\
-    $\alpha$         & $\beta$          & $\gamma$         \\
-    \midrule
-    A                & 10.230           & a                \\
-    B                & 45.678           & b                \\
-    C                & 99.987           & c                \\
-    \bottomrule
-  \end{tabular}
-  \caption[Voorbeeld tabel]{\label{tab:example}Voorbeeld van een tabel.}
+    \centering
+    \resizebox{\textwidth}{!}{%
+        \begin{tabular}{llccc}
+            \toprule
+            \textbf{Studie}              & \textbf{Toepassing}                        & \textbf{Klassen} & \textbf{Originele beelden} & \textbf{Beelden per klasse} \\
+            \midrule
+            \textcite{Tantiphanwadi2022} & bruiningsstadia van brood (classificatie)  & 3                & 900                        & 300 (gebalanceerd)          \\
+            \textcite{Schmitt2025}       & bakproducten detecteren/tellen (detectie)  & 18               & 1\,151                     & gem. $\approx$64            \\
+            \textcite{Boyd2024}          & fijnmazige voedselherkenning (classificatie) & 20             & 41\,949                    & gem. $\approx$2\,097        \\
+            \bottomrule
+        \end{tabular}%
+    }
+    \caption[Datasetomvang in vergelijkbare studies]{\label{tab:datasetomvang}%
+        Trainingsdata in vergelijkbare computervisiestudies rond brood- en
+        voedselherkenning. De vermelde aantallen betreffen originele, niet-geaugmenteerde
+        beelden. ``gem.'' duidt op een rekenkundig gemiddelde, berekend over een dataset die niet noodzakelijk
+        gelijk over de klassen verdeeld is.\autocite{Tantiphanwadi2022,Schmitt2025,Boyd2024}.}
 \end{table}
 
+
+De tabel maakt vooral duidelijk dat er geen rechtstreeks overdraagbaar standaardgetal
+bestaat: de datasetomvang loopt sterk uiteen naargelang het aantal klassen en de aard
+van de taak. Toch tekent zich een bruikbare \emph{indicatieve referentieband} af. Aan
+de onderkant tonen \textcite{Schmitt2025} dat zelfs enkele tientallen originele beelden
+per klasse kunnen volstaan, al leunen zij daarvoor zwaar op copy-paste-augmentatie en
+betreft het objectdetectie. Een brood-specifieke classificatiereferentie ligt hoger:
+\textcite{Tantiphanwadi2022} werkten met 300 originele beelden per klasse. Aan de
+bovenkant gaat fijnmazige voedselherkenning zoals bij \textcite{Boyd2024} richting
+enkele duizenden beelden per klasse, maar met veel grotere middelen dan in een
+bachelorproef beschikbaar zijn; dat getal vormt dus geen noodzakelijke bovengrens voor
+een proof of concept.
+
+
+Deze waarden zijn geen universele wetenschappelijke onder- of bovengrens, maar
+een referentiekader uit vergelijkbaar onderzoek. De hoogste referentie is voor dit onderzoek niet zomaar
+haalbaar. Zouden we de 300 beelden per klasse
+van \textcite{Tantiphanwadi2022} aanhouden voor de ongeveer vijftig broodsoorten van
+Delhaize Ledeberg, dan kwamen we al op zo'n 15.000 originele foto's, wat veel tijd en rekenwerk zou zijn voor een bachelorproef. De literatuur plaatst de
+zinvolle hoeveelheid dus ergens tussen enkele tientallen en enkele honderden originele
+beelden per broodsoort, waarbij sterkere augmentatie toelaat om dichter bij de
+onderkant te werken. Binnen die haalbare zone wordt de
+uiteindelijke hoeveelheid in het methodologiehoofdstuk vastgelegd.
+
+
+Belangrijker nog dan het aantal originele foto's is de variatie binnen elke klasse. Daarom
+fotograferen we per broodsoort meerdere verschillende fysieke exemplaren, in plaats van
+vele opnames van één enkel brood. \textcite{Wei2022} wijzen er immers op
+dat exemplaren binnen eenzelfde klasse sterk kunnen verschillen, en \textcite{Boyd2024}
+benadrukken het belang van die realistische variatie. Een dataset die slechts één
+exemplaar per soort bevat, mist die natuurlijke variatie en leidt makkelijker tot
+overfitting, waarbij het model de specifieke opnames vanbuiten leert in plaats van de
+onderliggende kenmerken van de broodsoort~\autocite{Shorten2019}.
+
+
+\section{Data-augmentatie}
+
+
+\textcite{Shorten2019} geven een breed overzicht van data-augmentatie: een verzameling
+technieken die een trainingsdataset kunstmatig vergroten en diverser maken om
+overfitting tegen te gaan wanneer er weinig data beschikbaar is. Veelgebruikte
+technieken zijn geometrische transformaties zoals rotatie, spiegeling, bijsnijden en
+translatie, aanpassingen in de kleurruimte zoals helderheid, saturatie en tint, en
+\emph{random erasing}, waarbij willekeurige delen van het beeld worden
+gewist~\autocite{Shorten2019}.
+
+
+Verschillende van die technieken sluiten rechtstreeks aan bij onze deelvragen. Variatie
+in helderheid en kleur bootst wisselende belichtingsomstandigheden na --- een beperking
+die ook \textcite{Olakanmi2023} vermelden --- terwijl random erasing een gedeeltelijke
+bedekking simuleert, zoals een hand of een zak die het brood deels aan het zicht
+onttrekt~\autocite{Ciapas2023}.
+
+
+Augmentatie vergroot dus het effectieve aantal trainingsvoorbeelden en maakt het model
+robuuster, maar het is geen volwaardige vervanging voor echte variatie tussen fysieke
+broden. Afgeleide beelden blijven varianten van bestaande opnames en voegen geen nieuwe,
+onafhankelijke observaties toe; augmentatie kan overfitting daarom verminderen, maar niet
+volledig oplossen~\autocite{Shorten2019}. In deze opzet dient augmentatie dan ook als
+aanvulling: ze wordt later toegepast op de originele
+beelden en genereert tijdens het trainen extra variatie, bovenop, en niet in plaats
+van, de variatie die we met meerdere fysieke exemplaren vastleggen.

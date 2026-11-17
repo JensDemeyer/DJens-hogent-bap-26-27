@@ -1,3 +1,4 @@
+
 %%=============================================================================
 %% Inleiding
 %%=============================================================================
@@ -5,12 +6,12 @@
 \chapter{\IfLanguageName{dutch}{Inleiding}{Introduction}}%
 \label{ch:inleiding}
 
-Binnen de retailsector automatiseren supermarkten in een snel tempo, waarbij zelfscankassa's en self-checkout systemen erg populair zijn geworden om de doorstroming te verbeteren. Voor verpakte producten met een unieke barcode verloopt dit scanproces meestal vlekkeloos. Bij verse, onverpakte producten zoals brood, groenten en fruit ontbreekt deze automatische identificatie echter. Hierdoor verschuift de verantwoordelijkheid voor het herkennen van het product naar de consument aan de zelfscankassa of de medewerker aan de traditionele kassa. Dit leidt in de praktijk regelmatig tot foutieve registraties. \textcite{Taylor2016} toont aan dat het bewust of onbewust foutief ingeven van producten, ook wel het "SWIPERS"-fenomeen genoemd, zorgt voor aanzienlijke verliezen in supermarkten. Ook recent onderzoek bevestigt dat het foutief scannen van barcodeloze producten aan zelfscankassa's in Belgische supermarkten nog steeds een erg actueel en hardnekkig probleem is \autocite{Tolner2024}. Computer vision biedt een mogelijkheid om dit proces te vergemakkelijken door producten visueel te herkennen en zo fouten bij de bron aan te pakken.
+Binnen de retailsector automatiseren supermarkten in een snel tempo. Voor verpakte producten met een unieke barcode verloopt de identificatie aan de kassa meestal vlekkeloos. Bij verse, onverpakte producten zoals brood, groenten en fruit ontbreekt deze automatische identificatie echter. Hierdoor hangt het correct ingeven van het product af van de klant of van de medewerker aan de kassa, wat in de praktijk regelmatig tot foutieve registraties leidt. Computer vision biedt een mogelijkheid om dit proces te vergemakkelijken door producten visueel te herkennen en zo fouten bij de bron aan te pakken.
 
 \section{\IfLanguageName{dutch}{Probleemstelling}{Problem Statement}}%
 \label{sec:probleemstelling}
 
-Dit onderzoek vertrekt vanuit een concrete probleemsituatie bij Delhaize Ledeberg. Klanten nemen er zelf een onverpakt brood uit de broodrekken en kunnen dit vervolgens naar wens snijden aan de broodmachine. Hiervoor stelt de winkel verschillende soorten broodzakken ter beschikking, afhankelijk van het type brood. Zo worden ronde en rechthoekige broden in andere zakken verpakt, en is er voor biobroden een specifieke zak vereist. 
+Dit onderzoek vertrekt vanuit een concrete probleemsituatie bij Delhaize Ledeberg. Klanten nemen er zelf een onverpakt brood uit de broodrekken en kunnen dit vervolgens naar wens snijden aan de broodmachine. Hiervoor stelt de winkel verschillende soorten broodzakken ter beschikking, afhankelijk van het type brood. Zo worden ronde en rechthoekige broden in andere zakken verpakt, en is er voor biobroden een specifieke zak vereist.
 
 In de praktijk kiezen klanten, door onwetendheid of haast, echter regelmatig de verkeerde broodzak. Omdat het kassapersoneel vertrouwt op de zak om het product in te geven, leiden deze fouten tot een kettingreactie aan problemen. Het zorgt voor verkeerde prijsaanrekeningen en het verstoort bovendien het voorraadbeheer doordat de kassaverkopen niet meer overeenkomen met de werkelijke daling van de fysieke voorraad. De behoefte van Delhaize Ledeberg bestaat daarom uit een geautomatiseerd systeem dat de klant direct bij de broodsnijmachine helpt. Zodra het brood op de machine wordt geplaatst, moet een camera het brood analyseren en op een scherm instructies geven over welke zak er gebruikt moet worden.
 
@@ -41,7 +42,7 @@ Om hier een antwoord op te geven, wordt het onderzoek opgesplitst in volgende de
 \section{\IfLanguageName{dutch}{Onderzoeksdoelstelling}{Research objective}}%
 \label{sec:onderzoeksdoelstelling}
 
-Het doel van deze bachelorproef is om naast een theoretisch antwoord op de onderzoeksvraag ook een werkend Proof of Concept (PoC) te ontwikkelen. Hiervoor wordt eerst een eigen dataset opgebouwd met foto's van de broodsoorten uit het assortiment van Delhaize Ledeberg. Deze dataset zal ook doelbewust beelden bevatten met variërende belichting en gedeeltelijke bedekking om de omstandigheden in de winkel na te bootsen. 
+Het doel van deze bachelorproef is om naast een theoretisch antwoord op de onderzoeksvraag ook een werkend Proof of Concept (PoC) te ontwikkelen. Hiervoor wordt eerst een eigen dataset opgebouwd met foto's van de broodsoorten uit het assortiment van Delhaize Ledeberg. Deze dataset zal ook doelbewust beelden bevatten met variërende belichting en gedeeltelijke bedekking om de omstandigheden in de winkel na te bootsen.
 
 Op basis van deze data worden bestaande AI-modellen getraind en geëvalueerd om na te gaan in welke mate zij de visueel sterk gelijkende broden van elkaar kunnen onderscheiden. Daarbij wordt onderzocht welke modellen geschikt zijn voor deze taak en welk effect fine-tuning heeft op de accuraatheid. Het concrete eindresultaat is een werkende PoC die via een camera een brood analyseert en minstens kan bepalen in welke broodzakcategorie het thuishoort. Daarnaast wordt onderzocht of de herkenning ver genoeg kan gaan om ook de specifieke broodsoort correct te classificeren. Op basis van de behaalde resultaten wordt ten slotte een technisch onderbouwd advies geformuleerd over de praktische haalbaarheid van automatische broodherkenning voor Delhaize Ledeberg.
 

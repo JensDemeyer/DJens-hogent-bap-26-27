@@ -5,26 +5,199 @@
 \chapter{\IfLanguageName{dutch}{Methodologie}{Methodology}}%
 \label{ch:methodologie}
 
-%% TODO: In dit hoofstuk geef je een korte toelichting over hoe je te werk bent
-%% gegaan. Verdeel je onderzoek in grote fasen, en licht in elke fase toe wat
-%% de doelstelling was, welke deliverables daar uit gekomen zijn, en welke
-%% onderzoeksmethoden je daarbij toegepast hebt. Verantwoord waarom je
-%% op deze manier te werk gegaan bent.
-%% 
-%% Voorbeelden van zulke fasen zijn: literatuurstudie, opstellen van een
-%% requirements-analyse, opstellen long-list (bij vergelijkende studie),
-%% selectie van geschikte tools (bij vergelijkende studie, "short-list"),
-%% opzetten testopstelling/PoC, uitvoeren testen en verzamelen
-%% van resultaten, analyse van resultaten, ...
-%%
-%% !!!!! LET OP !!!!!
-%%
-%% Het is uitdrukkelijk NIET de bedoeling dat je het grootste deel van de corpus
-%% van je bachelorproef in dit hoofstuk verwerkt! Dit hoofdstuk is eerder een
-%% kort overzicht van je plan van aanpak.
-%%
-%% Maak voor elke fase (behalve het literatuuronderzoek) een NIEUW HOOFDSTUK aan
-%% en geef het een gepaste titel.
+Dit hoofdstuk beschrijft het plan van aanpak waarmee de onderzoeksvragen uit de
+inleiding worden beantwoord. Het bouwt rechtstreeks voort op de bevindingen van de
+literatuurstudie in Hoofdstuk~\ref{ch:stand-van-zaken} en vertaalt die naar een
+concreet onderzoeksontwerp. Het onderzoek wordt opgevat als een vergelijkende
+studie: er bestaat geen op voorhand vaststaand ``beste'' model voor onze casus,
+dus worden meerdere modellen en twee taakvormen onder gelijke omstandigheden tegen
+elkaar afgewogen. Dit hoofdstuk vormt een eerste versie van die methodologie en
+schetst vooral het geplande onderzoeksproces; de uiteindelijke resultaten en de
+conclusie volgen in de latere hoofdstukken. Omdat het onderzoek een exploratief en
+iteratief karakter heeft, kan de hier beschreven aanpak tijdens de uitvoering nog
+verfijnd en uitgebreid worden wanneer praktische keuzes of tussentijdse experimenten
+daarom vragen.
 
-\lipsum[21-25]
+\section{Onderzoeksopzet}
 
+Om de centrale onderzoeksvraag te beantwoorden, wordt het werk opgedeeld in een
+aantal opeenvolgende fasen. Elke fase heeft een eigen doelstelling en levert een
+concrete tussenstap (deliverable) op die als input dient voor de volgende fase:
+
+\begin{enumerate}
+    \item \textbf{Literatuurstudie en afbakening} --- de theoretische basis en de
+    keuze van de onderzoeksrichting.
+    \item \textbf{Dataverzameling en opbouw van de dataset} --- het aanleggen van een
+    eigen beelddataset bij Delhaize Ledeberg.
+    \item \textbf{Voorverwerking en datasetsplitsing} --- het klaarmaken van de data
+    voor training en evaluatie.
+    \item \textbf{Selectie en training van de modellen} --- het trainen van een
+    shortlist aan classificatiemodellen en een detectiemodel via transfer
+    learning.
+    \item \textbf{Experimentele evaluatie} --- het meten en vergelijken van de
+    prestaties onder verschillende omstandigheden.
+    \item \textbf{Analyse en Proof of Concept} --- het selecteren van de beste aanpak
+    en het bouwen van een werkende proof of concept.
+\end{enumerate}
+
+Een rode draad doorheen deze fasen is het tweeledige doel uit de probleemstelling:
+enerzijds het grofmazige minimumdoel (de juiste broodzakcategorie bepalen) en
+anderzijds het fijnmazigere onderzoeksdoel (de specifieke broodsoort onderscheiden).
+Beide niveaus worden met dezelfde dataset en grotendeels dezelfde modellen
+onderzocht.
+
+\section{Literatuurstudie en afbakening}
+
+De eerste fase bestond uit de literatuurstudie, die in Hoofdstuk~\ref{ch:stand-van-zaken}
+is uitgewerkt en hier niet wordt herhaald. Deze fase had als doel de bestaande
+technieken voor brood- en voedselherkenning in kaart te brengen en de voornaamste
+methodologische keuzes te onderbouwen. De belangrijkste conclusies sturen de rest
+van dit hoofdstuk rechtstreeks aan: beeldclassificatie is theoretisch de meest
+directe taak voor onze opstelling, maar objectdetectie wordt parallel getest;
+transfer learning is aangewezen bij een beperkte eigen dataset; en er bestaat geen
+publieke dataset die de broodsoorten van Delhaize Ledeberg als afzonderlijke klassen
+bevat. Die laatste vaststelling verantwoordt meteen de volgende fase, waarin een
+eigen dataset wordt opgebouwd.
+
+\section{Dataverzameling en opbouw van de dataset}
+
+In deze fase wordt een eigen beelddataset aangelegd met foto's van de broodsoorten
+uit het assortiment van Delhaize Ledeberg. De opnames gebeuren ter plaatse, in een
+opstelling die de uiteindelijke toepassing aan de broodsnijmachine zo goed mogelijk
+benadert. Het exacte aantal broodsoorten dat in de dataset terechtkomt, kan pas op
+de dag van de opnames definitief worden vastgesteld, aangezien dit afhangt van het
+assortiment en de beschikbaarheid in de winkel op dat moment. Ook de beschikbare tijd
+op de opnamedag bepaalt mee hoeveel data effectief verzameld kan worden.
+
+Als streefdoel wordt gemikt op ongeveer 75 tot 100 originele foto's per broodsoort.
+Per individueel fysiek brood worden ongeveer vijf foto's genomen, wat betekent dat er
+per broodsoort zo'n vijftien tot twintig verschillende exemplaren nodig zijn. Deze
+keuze volgt rechtstreeks uit de literatuurstudie, waar vooral de variatie tussen
+verschillende fysieke exemplaren van dezelfde soort belangrijk bleek.
+
+Om de probleemdomein-deelvragen over licht en bedekking te kunnen beantwoorden, wordt
+een bewust onderscheid gemaakt tussen de manier waarop die variatie in de training en
+in de evaluatie terechtkomt. De hoofddataset bestaat hoofdzakelijk uit normale,
+realistische foto's van broden aan de broodsnijmachine. Tijdens het trainen wordt
+variatie in onder meer belichting, kleur en gedeeltelijke bedekking kunstmatig
+nagebootst met data-augmentatie, wat het model robuuster maakt zonder dat daarvoor
+grote aantallen extra opnames nodig zijn~\autocite{Shorten2019}.
+
+Synthetische augmentatie alleen volstaat echter niet om die deelvragen geloofwaardig
+te beantwoorden: een helderheidsaanpassing of een kunstmatig gewist beelddeel
+benadert de werkelijkheid slechts ruw, terwijl echt winkellicht ook schaduwen en
+reflecties verandert~\autocite{Olakanmi2023} en een echte hand of zak het brood op
+een natuurlijke manier bedekt~\autocite{Ciapas2023}. Daarom worden tijdens de
+dataverzameling bijkomend een beperkt aantal echte foto's genomen onder afwijkende
+lichtomstandigheden en met echte gedeeltelijke bedekking. Deze beelden worden niet aan
+de trainingsdata toegevoegd, maar apart gehouden als \emph{challenge-testset} waarmee
+de robuustheid van de modellen onder realistische omstandigheden wordt geëvalueerd.
+
+Elke specifieke broodsoort wordt gelabeld op soortniveau en tegelijk gekoppeld aan de
+correcte broodzakcategorie. Daardoor kan dezelfde dataset zowel op het fijnmazige
+niveau (broodsoort) als op het grofmazige niveau (broodzakcategorie) worden
+geëvalueerd, zonder dat er opnieuw data verzameld moet worden. Voor de objectdetectie
+worden op dezelfde ruwe beelden bijkomend bounding boxes rond de broden geannoteerd;
+de onderliggende foto's blijven dus identiek, enkel de annotatie verschilt.
+
+\section{Voorverwerking en datasetsplitsing}
+
+Voor de verzamelde beelden bruikbaar zijn, worden ze eerst gecontroleerd op
+kwaliteit (scherpte, belichting, correcte labels) en consistent voorverwerkt, onder
+meer door ze te herschalen naar de invoerresolutie van de gekozen modellen. De normale
+hoofddataset wordt vervolgens opgesplitst in een trainings-, validatie- en testset
+volgens een 70/15/15-verdeling, waarbij 70 procent naar de trainingsset gaat en
+telkens 15 procent naar de validatie- en testset.
+
+Bij het splitsen wordt een belangrijke methodologische voorzorg genomen: de verdeling
+gebeurt op het niveau van het fysieke brood en niet willekeurig per foto. Alle foto's
+van eenzelfde exemplaar belanden dus volledig in dezelfde subset. Zo wordt vermeden
+dat sterk gelijkende opnames van hetzelfde brood zowel in de trainings- als in de
+testset voorkomen, wat de prestaties kunstmatig zou opdrijven (\emph{data leakage}).
+Deze opzet garandeert dat het model op de testset wordt beoordeeld op broden die het
+tijdens de training nooit heeft gezien.
+
+Naast deze normale testset staat de eerder vermelde challenge-testset met echte licht-
+en occlusiebeelden. Die blijft volledig buiten de trainings- en validatieset en dient
+uitsluitend voor de eindevaluatie van de robuustheid. Waar praktisch mogelijk worden
+hiervoor fysieke broodexemplaren gebruikt die niet in de trainings- of validatieset
+voorkomen, zodat ook hier geen data leakage optreedt.
+
+Data-augmentatie wordt uitsluitend op de trainingsset toegepast. De validatieset, de
+normale testset en de challenge-testset bestaan dus steeds uit echte,
+niet-geaugmenteerde beelden, zodat elke evaluatie op realistische beelden gebeurt. De
+augmentatietechnieken sluiten aan bij de deelvragen rond licht en bedekking:
+geometrische transformaties, variatie in helderheid en kleur, en het willekeurig
+wissen van beelddelen~\autocite{Shorten2019}. Op die manier is augmentatie een
+trainingsstrategie om robuustheid op te bouwen, terwijl de echte challengebeelden de
+onafhankelijke toets van die robuustheid vormen.
+
+\section{Selectie en training van de modellen}
+
+In deze fase worden de modellen getraind en vergeleken. De gemeenschappelijke
+basisstrategie is transfer learning: er wordt vertrokken van CNN's die al op een
+grote dataset zoals ImageNet zijn voorgetraind, waarna ze op de eigen brooddataset
+worden bijgesteld. Op die manier blijft ook een relatief kleine dataset werkbaar.
+Waar praktisch haalbaar wordt het effect van domeinspecifieke fine-tuning onderzocht,
+door niet enkel de classificatielaag maar ook diepere lagen bij te stellen.
+
+Voor beeldclassificatie wordt gewerkt met een shortlist van architecturen in plaats
+van op voorhand één model als beste aan te duiden. Die aanpak is methodologisch
+onderbouwd: \textcite{AbouBaker2022} tonen dat voorgetrainde netwerken sterk kunnen
+verschillen in de afweging tussen nauwkeurigheid, trainingstijd en modelgrootte,
+waardoor het zinvol is meerdere kandidaten te vergelijken. Deze voorlopige shortlist
+bevat zowel een compacte, snelle architectuur (MobileNet) als een krachtigere backbone
+(DenseNet), aangevuld met VGG-16 als brood-specifieke referentie uit
+\textcite{Tantiphanwadi2022}. De keuze voor DenseNet sluit aan bij \textcite{Boyd2024},
+die onder zeven vergeleken CNN-architecturen DenseNet als sterkste model voor
+fijnmazige voedselherkenning aanwijzen. De samenstelling van deze shortlist ligt niet
+definitief vast en kan tijdens de uitvoering nog worden bijgesteld als praktische
+bevindingen daarom vragen.
+
+Voor objectdetectie wordt een model uit de YOLO-familie onderzocht, dat één brood in
+het beeld lokaliseert en tegelijk classificeert. De precieze YOLO-variant wordt tijdens
+de uitvoering gekozen op basis van beschikbaarheid, prestaties en praktische
+inzetbaarheid. Om een eerlijke vergelijking mogelijk te maken, worden de classificatie-
+en detectiemodellen zoveel mogelijk onder vergelijkbare voorwaarden en op dezelfde
+onderliggende beelden getraind.
+
+\section{Experimentele evaluatie}
+
+Zodra de modellen getraind zijn, worden ze systematisch geëvalueerd en onderling
+vergeleken. Voor de classificatiemodellen wordt niet enkel naar de accuracy gekeken,
+maar ook naar precision, recall en de F1-score. Omdat het om een meerklassenprobleem
+met veel gelijkende broodsoorten gaat, worden deze maten als macrogemiddelde berekend,
+zodat elke klasse even zwaar meetelt ongeacht het aantal beelden. Een confusion matrix
+maakt daarbij zichtbaar welke broodsoorten het vaakst met elkaar worden verward. Voor
+het detectiemodel wordt de \emph{mean average precision} (mAP) als primaire maat
+gebruikt, aangevuld met precision en recall; afhankelijk van wat de gekozen
+YOLO-implementatie ondersteunt, wordt mAP gerapporteerd bij een IoU-drempel van 0,5
+(mAP@0.5) en eventueel over het bereik 0,5--0,95 (mAP@0.5:0.95).
+
+Naast deze kwaliteitsmaten worden ook de inferentietijd en de modelgrootte gemeten.
+Deze praktische criteria zijn essentieel omdat het systeem aan de broodsnijmachine
+snel moet reageren en de klant niet lang mag wachten; de uiteindelijke modelkeuze mag
+dan ook niet blind op één metriek steunen, maar moet nauwkeurigheid afwegen tegen
+snelheid en inzetbaarheid.
+
+De evaluatie verloopt in stappen die elk een onderzoeksdeelvraag bedienen. Eerst
+worden de prestaties op de normale testset bepaald; die vormen de referentie waartegen
+alles wordt afgezet. Vervolgens worden dezelfde relevante metrics berekend op de echte
+licht-challengeset en daarna op de echte occlusie-challengeset. Door de prestatiedaling
+ten opzichte van de normale testset te vergelijken, kan de impact van variërende
+belichting en van gedeeltelijke bedekking afzonderlijk worden gekwantificeerd. Deze
+vergelijking wordt waar mogelijk uitgevoerd voor beide taakvormen (classificatie en
+detectie) en op beide niveaus (broodzakcategorie en specifieke broodsoort), zodat ook
+de bijdrage van transfer learning en fine-tuning zichtbaar wordt.
+
+\section{Analyse en Proof of Concept}
+
+In de laatste fase worden de resultaten van alle experimenten samengebracht en
+geanalyseerd. Op basis van de vergelijking tussen de modellen en taakvormen wordt de
+best presterende en praktisch meest haalbare aanpak geselecteerd. Daarmee wordt een
+werkende proof of concept gebouwd die via een camera een brood analyseert en minstens
+de juiste broodzakcategorie adviseert, met daarbovenop de vraag hoever de herkenning
+tot op het niveau van de specifieke broodsoort kan gaan. Het hoofdstuk mondt uit in een
+technisch onderbouwd advies over de praktische haalbaarheid van automatische
+broodherkenning voor Delhaize Ledeberg, dat in de conclusie wordt teruggekoppeld aan
+de onderzoeksvragen.
